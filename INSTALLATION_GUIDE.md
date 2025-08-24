@@ -3,7 +3,7 @@
 ## 🚀 Quick Installation
 
 ### Step 1: Install Package
-1. **Click the installation link**: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tJ9000000HecLIAS
+1. **Click the installation link**: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tJ9000000HecQIAS
 2. **Login** to your Salesforce org
 3. **Choose installation option**:
    - "Install for All Users" (recommended)
@@ -90,10 +90,10 @@ For technical issues:
 
 ## 📊 Version Information
 
-- **Current Version**: 1.1.0
-- **Package ID**: 04tJ9000000HecLIAS
+- **Current Version**: 1.2.0
+- **Package ID**: 04tJ9000000HecQIAS
 - **Developer**: Sofiane Hamila
-- **Release Date**: 2024
+- **Release Date**: 2025
 
 ---
 

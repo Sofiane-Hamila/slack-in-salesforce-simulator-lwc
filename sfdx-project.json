@@ -1,12 +1,12 @@
 {
   "packageDirectories": [
     {
-      "versionName": "Version 1.1 - Settings Tab with Orchestrator",
-      "versionNumber": "1.1.0.NEXT",
+      "versionName": "Version 1.2 - Latest Fixes & Improvements",
+      "versionNumber": "1.2.0.NEXT",
       "path": "force-app",
       "default": true,
       "package": "Slack In SF Simulator",
-      "versionDescription": "Corrected version with Settings tab showing conversationOrchestrator (configurator + simulator) as originally designed"
+      "versionDescription": "Latest version with all recent improvements including message triggering fixes, enhanced configurator, and component communication updates"
     }
   ],
   "name": "Slack_In_SF_Simulator",
@@ -17,6 +17,7 @@
     "Slack In SF Simulator": "0HoJ90000004C9cKAE",
     "Slack In SF Simulator@0.1.0-1": "04tJ9000000HecBIAS",
     "Slack In SF Simulator@1.0.0-1": "04tJ9000000HecGIAS",
-    "Slack In SF Simulator@1.1.0-1": "04tJ9000000HecLIAS"
+    "Slack In SF Simulator@1.1.0-1": "04tJ9000000HecLIAS",
+    "Slack In SF Simulator@1.2.0-1": "04tJ9000000HecQIAS"
   }
 }
