@@ -82,6 +82,9 @@ export default class SlackSimulator extends LightningElement {
     // Flag pour éviter les chargements multiples
     isMessagesLoaded = false;
     
+    // Flag pour éviter les déclenchements automatiques multiples
+    isAutoTriggerRunning = false;
+    
     // Sauvegarder les messages dans localStorage
     saveMessagesToLocalStorage() {
         try {
@@ -319,6 +322,8 @@ export default class SlackSimulator extends LightningElement {
                 this.loadConversationFlowFromConfig();
             }
             
+            // ⚠️ CORRECTION : Vérifier les réponses automatiques seulement pour les messages utilisateur réels
+            console.log('💬 Message utilisateur réel détecté:', messageText, '- Vérification des déclencheurs...');
             this.checkConversationFlow(messageText);
         }
     }
@@ -330,35 +335,41 @@ export default class SlackSimulator extends LightningElement {
             console.log('🎮 SlackSimulator: this =', this);
             console.log('🎮 SlackSimulator: window =', window);
             
-            // Charger les messages sauvegardés seulement si pas déjà fait
+            // ⚠️ CORRECTION MAJEURE : Ne pas charger automatiquement les messages au démarrage
+            // Les messages ne doivent apparaître que lors d'un "Save and Launch" explicite
             if (!this.isMessagesLoaded) {
-                console.log('🔄 Premier chargement des messages...');
-                const hasLoadedMessages = this.loadMessagesFromLocalStorage();
-                if (!hasLoadedMessages) {
-                    this.messages = [];
+                console.log('🔄 Initialisation - Vérifier s\'il y a des messages persistés');
+                
+                // 🔧 CORRECTION : Restaurer les messages depuis localStorage si disponibles (refresh)
+                this.loadMessagesFromLocalStorage();
+                this.loadConversationFlowFromConfig();
+                
+                if (this.messages.length > 0) {
+                    console.log('📱 Messages restaurés depuis localStorage:', this.messages.length, 'messages');
+                    console.log('🔄 Conversation en cours - Permettre la continuation');
+                    this.isConversationActive = true;
+                    this.scrollToBottom();
                 } else {
-                    // Si des messages ont été chargés, faire défiler vers le bas
-                    setTimeout(() => {
-                        this.scrollToBottom();
-                    }, 200);
+                    console.log('🔄 Aucun message persisté - Interface vide');
+                    this.messages = [];
                 }
+                
                 this.isMessagesLoaded = true;
+                console.log('🔄 Interface initialisée');
             } else {
-                console.log('🔄 Messages déjà chargés, ignorer le rechargement');
+                console.log('🔄 Composant déjà initialisé');
             }
             
-            // IMPORTANT: Vérifier que conversationFlow est bien chargé
-            console.log('🔍 Vérification conversationFlow après chargement:', this.conversationFlow.length);
-            if (this.conversationFlow.length === 0) {
-                console.log('⚠️ ConversationFlow vide, tentative de chargement depuis la configuration...');
-                // Essayer de charger depuis la configuration du localStorage
-                this.loadConversationFlowFromConfig();
-            }
+            // ⚠️ CORRECTION RÉGRESSION : Ne pas charger automatiquement conversationFlow au démarrage
+            // Cela sera fait uniquement lors du "Save and Launch"
+            console.log('🔍 ConversationFlow au démarrage:', this.conversationFlow?.length || 0, 'étapes');
+            console.log('🔍 Attendre le lancement explicite via Save and Launch...');
             
             console.log('🎮 SlackSimulator: Messages initialisés dans connectedCallback');
             
-            // Vérifier s'il y a des données en attente dans window
-            this.checkForWindowData();
+            // ⚠️ CORRECTION MAJEURE : Ne pas vérifier les données window au démarrage
+            // Cela sera fait uniquement lors d'un lancement explicite
+            console.log('🔍 Pas de vérification automatique des données window au démarrage');
             
             // Écouter l'événement window personnalisé
             this.handleSlackDataReady = this.handleSlackDataReady.bind(this);
@@ -370,19 +381,12 @@ export default class SlackSimulator extends LightningElement {
             
             console.log('🎮 SlackSimulator: Écouteurs d\'événements window ajoutés');
             
-            // Test de l'écouteur d'événement
-            console.log('🎮 SlackSimulator: Test de l\'écouteur...');
-            setTimeout(() => {
-                console.log('🎮 SlackSimulator: Envoi d\'un événement de test...');
-                window.dispatchEvent(new CustomEvent('slackSimulatorDataReady', {
-                    detail: { test: 'événement de test' }
-                }));
-            }, 1000);
+            // ⚠️ SUPPRESSION : Pas de test d'événement au démarrage
+            console.log('🎮 SlackSimulator: Écouteurs configurés - Attendre lancement explicite');
             
-            // Vérifier périodiquement pour les données (fallback)
-            this.windowDataInterval = setInterval(() => {
-                this.checkForWindowData();
-            }, 100); // Vérifier toutes les 100ms
+            // ⚠️ SUPPRESSION : Pas de vérification périodique au démarrage
+            // Cela causait le déclenchement automatique des messages
+            console.log('🔍 Pas de vérification périodique des données au démarrage');
             
         } catch (error) {
             console.error('Erreur lors de la connexion du SlackSimulator:', error);
@@ -417,17 +421,23 @@ export default class SlackSimulator extends LightningElement {
         if (window.slackSimulatorData) {
             console.log('🎮 SlackSimulator: Données trouvées dans window, traitement...');
             
-            // Vérifier si c'est un lancement explicite récent (moins de 5 secondes)
+            // ⚠️ CORRECTION MAJEURE : Vérification très stricte du lancement explicite
             const data = window.slackSimulatorData;
             const now = Date.now();
             const dataTimestamp = data.timestamp || 0;
-            const isRecent = (now - dataTimestamp) < 5000; // 5 secondes
+            const isVeryRecent = (now - dataTimestamp) < 2000; // 2 secondes seulement
             
-            if (data.isExplicitLaunch && isRecent) {
-                console.log('🎮 Lancement explicite récent détecté, traitement des données');
+            console.log('🎮 Vérification stricte:', {
+                isExplicitLaunch: data.isExplicitLaunch,
+                age: now - dataTimestamp,
+                isVeryRecent: isVeryRecent
+            });
+            
+            if (data.isExplicitLaunch && isVeryRecent) {
+                console.log('🎮 ✅ Lancement explicite très récent détecté - Traitement autorisé');
                 this.processConversationData(window.slackSimulatorData);
             } else {
-                console.log('🎮 Données anciennes ou rafraîchissement, ignorer les données window');
+                console.log('🎮 ❌ Données trop anciennes ou pas de lancement explicite - IGNORER');
             }
             
             delete window.slackSimulatorData; // Nettoyer
@@ -437,6 +447,8 @@ export default class SlackSimulator extends LightningElement {
                 clearInterval(this.windowDataInterval);
                 this.windowDataInterval = null;
             }
+        } else {
+            console.log('🎮 Aucune donnée window trouvée');
         }
     }
     
@@ -464,25 +476,51 @@ export default class SlackSimulator extends LightningElement {
         // Stocker les données de conversation
         this.conversationFlow = data.conversationFlow || [];
         console.log('🎮 ConversationFlow stocké:', this.conversationFlow);
+        console.log('🎮 ConversationFlow détail:', this.conversationFlow.map(s => ({order: s.order, messageBody: s.messageBody, keywords: s.keywords})));
         
-        // Ne pas écraser les messages existants lors d'un rafraîchissement
-        // Seulement les vider si c'est un nouveau lancement explicite
+        // ⚠️ VÉRIFICATION CRITIQUE : S'assurer que conversationFlow n'est pas vide
+        if (!this.conversationFlow || this.conversationFlow.length === 0) {
+            console.log('🚨 ConversationFlow vide détecté, tentative de rechargement...');
+            this.loadConversationFlowFromConfig();
+            console.log('🚨 Après rechargement, conversationFlow:', this.conversationFlow.length, 'étapes');
+        }
+        
+        // ⚠️ CORRECTION MAJEURE : TOUJOURS vider les messages lors d'un lancement explicite
         const isExplicitLaunch = data.isExplicitLaunch || false;
         
-        if (isExplicitLaunch || this.messages.length === 0) {
-            console.log('🎮 Nouveau lancement explicite ou aucun message - réinitialisation');
+        if (isExplicitLaunch) {
+            console.log('🎮 NOUVEAU LANCEMENT EXPLICITE - Réinitialisation complète');
             this.messages = [];
+            this.isAutoTriggerRunning = false; // Reset du flag de protection
+            
+            // Nettoyer le localStorage des messages pour éviter les conflits
+            localStorage.removeItem(this.MESSAGES_STORAGE_KEY);
+            console.log('🎮 Messages et localStorage nettoyés');
         } else {
-            console.log('🎮 Messages existants conservés lors du rafraîchissement:', this.messages.length, 'messages');
+            console.log('🎮 Rafraîchissement de page - Essayer de charger les messages sauvegardés');
+            // Lors d'un rafraîchissement, essayer de charger les messages existants
+            const hasLoadedMessages = this.loadMessagesFromLocalStorage();
+            if (hasLoadedMessages) {
+                console.log('🎮 Messages restaurés depuis localStorage:', this.messages.length);
+                // Faire défiler vers le bas après restauration
+                setTimeout(() => {
+                    this.scrollToBottom();
+                }, 200);
+                // Pas de déclenchement automatique lors de la restauration
+                return; // Sortir sans déclencher displayInitialMessages
+            } else {
+                console.log('🎮 Aucun message à restaurer');
+            }
         }
         
         // Activer la conversation
         this.isConversationActive = true;
         
-        // Ne remettre lastTriggeredStep à 0 que lors d'un nouveau lancement explicite
+        // ⚠️ CORRECTION MAJEURE : Pour le flux automatique, commencer à 0
         if (isExplicitLaunch) {
+            // Pour un nouveau lancement avec flux automatique, remettre à 0
             this.lastTriggeredStep = 0;
-            console.log('🎮 Nouveau lancement - lastTriggeredStep remis à 0');
+            console.log('🎮 Nouveau lancement - lastTriggeredStep remis à 0 pour flux automatique');
         } else {
             console.log('🎮 Rafraîchissement - lastTriggeredStep conservé:', this.lastTriggeredStep);
         }
@@ -499,16 +537,34 @@ export default class SlackSimulator extends LightningElement {
         // Faire défiler vers le bas après avoir chargé les messages initiaux
         this.scrollToBottom();
         
-        // Sauvegarder l'état final après le traitement
-        this.saveMessagesToLocalStorage();
+        // ⚠️ CORRECTION : Sauvegarder seulement pour les nouveaux lancements
+        if (isExplicitLaunch) {
+            console.log('🎮 Sauvegarde de l\'état initial pour nouveau lancement');
+            this.saveMessagesToLocalStorage();
+        } else {
+            console.log('🎮 Pas de sauvegarde pour rafraîchissement de page');
+        }
     }
 
     // Afficher les messages initiaux (étapes sans keywords)
     displayInitialMessages() {
         try {
+            console.log('📝 displayInitialMessages - DÉBUT');
+            console.log('📝 displayInitialMessages - conversationFlow:', this.conversationFlow);
+            console.log('📝 displayInitialMessages - conversationFlow.length:', this.conversationFlow?.length || 0);
+            
             if (!this.conversationFlow || this.conversationFlow.length === 0) {
-                console.log('Aucune conversation flow à afficher');
-                return;
+                console.log('🚨 Aucune conversation flow à afficher - Tentative de rechargement...');
+                
+                // Essayer de recharger depuis la configuration
+                const hasReloaded = this.loadConversationFlowFromConfig();
+                console.log('🚨 Rechargement depuis config:', hasReloaded ? 'SUCCÈS' : 'ÉCHEC');
+                console.log('🚨 ConversationFlow après rechargement:', this.conversationFlow?.length || 0, 'étapes');
+                
+                if (!this.conversationFlow || this.conversationFlow.length === 0) {
+                    console.log('🚨 Impossible de charger conversationFlow, abandon');
+                    return;
+                }
             }
             
             // Filtrer les étapes sans keywords (messages initiaux) avec validation robuste
@@ -522,41 +578,154 @@ export default class SlackSimulator extends LightningElement {
                                      step.keywords === undefined;
                 
                 return hasNoKeywords;
-            });
+            }).sort((a, b) => (a.order || 0) - (b.order || 0)); // Trier par ordre
         
         console.log('Étapes initiales trouvées:', initialSteps.length);
+        console.log('Étapes initiales triées:', initialSteps.map(s => ({order: s.order, messageBody: s.messageBody})));
         
         // Afficher chaque étape initiale
         initialSteps.forEach((step, index) => {
             try {
                 const message = {
-                    id: this.generateMessageId(index),
+                    id: this.generateMessageId(`initial-${step.order || index}`),
                     userName: step.userName || 'Système',
                     avatarUrl: this.getAvatarUrl(step.avatarUrl, step.userName || 'Système'),
                     messageBody: step.messageBody || '',
-                    timestamp: step.timestamp || this.formatTimestamp()
-                    };
+                    timestamp: step.timestamp || this.formatTimestamp(),
+                    stepOrder: step.order || (index + 1) // Garder une référence à l'ordre original
+                };
                 
                 this.messages = [...this.messages, message];
                 
-                // Mettre à jour le dernier step déclenché
-                if (step.order > this.lastTriggeredStep) {
-                    this.lastTriggeredStep = step.order;
-                    console.log('📝 lastTriggeredStep mis à jour dans displayInitialMessages:', this.lastTriggeredStep);
-                }
+                // ⚠️ CORRECTION CRITIQUE : Ne pas mettre à jour lastTriggeredStep pour les messages initiaux
+                // car cela empêcherait les messages avec keywords de se déclencher
+                console.log('📝 Message initial ajouté (ordre:', step.order, ') - lastTriggeredStep conservé à:', this.lastTriggeredStep);
+                
+                // 🔄 SUPPRESSION : Éviter la duplication - le déclenchement se fera via triggerAutomaticResponses()
+                console.log('📝 Message initial ajouté - déclenchement géré par triggerAutomaticResponses');
+                
             } catch (error) {
                 console.error('Erreur lors de l\'affichage du message initial:', error, step);
             }
-            });
+        });
             
-            // Trier les messages par ordre d'affichage (conversion en nombre pour le tri)
-            this.messages.sort((a, b) => {
-                const aId = typeof a.id === 'string' ? parseInt(a.id.split('-')[1]) || 0 : a.id;
-                const bId = typeof b.id === 'string' ? parseInt(b.id.split('-')[1]) || 0 : b.id;
-                return aId - bId;
-            });
+        // Trier les messages par ordre d'étape (stepOrder) pour un affichage cohérent
+        this.messages.sort((a, b) => {
+            const aOrder = a.stepOrder || 0;
+            const bOrder = b.stepOrder || 0;
+            return aOrder - bOrder;
+        });
+        
+        console.log('📝 Messages initiaux affichés, lastTriggeredStep maintenu à:', this.lastTriggeredStep);
+        console.log('📝 DEBUG - Avant appel triggerAutomaticResponses');
+        console.log('📝 DEBUG - this.triggerAutomaticResponses existe:', typeof this.triggerAutomaticResponses);
+        
+        // 🔄 CORRECTION DUPLICATION : Un seul appel avec délai
+        setTimeout(() => {
+            try {
+                console.log('🔄 DÉCLENCHEMENT AUTOMATIQUE - Début du processus (délai 1s)');
+                this.triggerAutomaticResponses();
+                console.log('🔄 DÉCLENCHEMENT AUTOMATIQUE - Appel terminé');
+            } catch (error) {
+                console.error('🔄 DÉCLENCHEMENT AUTOMATIQUE - Erreur:', error);
+            }
+        }, 1000); // Un seul appel avec délai
+        
         } catch (error) {
             console.error('Erreur lors de l\'affichage des messages initiaux:', error);
+        }
+    }
+
+    // 🔄 NOUVELLE MÉTHODE : Déclencher automatiquement toutes les réponses en cascade
+    triggerAutomaticResponses() {
+        try {
+            // ⚠️ PROTECTION CONTRE LA DUPLICATION
+            if (this.isAutoTriggerRunning) {
+                console.log('🔄 TRIGGER AUTO - Déjà en cours, ignorer');
+                return;
+            }
+            
+            this.isAutoTriggerRunning = true;
+            console.log('🔄 TRIGGER AUTO - Début du processus automatique');
+            console.log('🔄 TRIGGER AUTO - conversationFlow:', this.conversationFlow?.length || 0, 'étapes');
+            console.log('🔄 TRIGGER AUTO - lastTriggeredStep:', this.lastTriggeredStep);
+            console.log('🔄 TRIGGER AUTO - isConversationActive:', this.isConversationActive);
+            console.log('🔄 TRIGGER AUTO - messages.length:', this.messages?.length || 0);
+            
+            if (!this.isConversationActive) {
+                console.log('🔄 TRIGGER AUTO - Conversation non active');
+                return;
+            }
+            
+            if (!this.conversationFlow || this.conversationFlow.length === 0) {
+                console.log('🔄 TRIGGER AUTO - ConversationFlow vide ou inexistant');
+                return;
+            }
+
+            if (!this.messages || this.messages.length === 0) {
+                console.log('🔄 TRIGGER AUTO - Aucun message affiché');
+                return;
+            }
+
+            // Récupérer tous les messages actuellement affichés
+            const displayedMessages = this.messages.map(msg => msg.messageBody?.toLowerCase()?.trim() || '').filter(msg => msg !== '');
+            console.log('🔄 TRIGGER AUTO - Messages affichés:', displayedMessages);
+
+            // Trouver les étapes avec keywords
+            const keywordSteps = this.conversationFlow.filter(step => {
+                return step && step.keywords && typeof step.keywords === 'string' && step.keywords.trim() !== '';
+            }).sort((a, b) => (a.order || 0) - (b.order || 0));
+
+            console.log('🔄 TRIGGER AUTO - Étapes avec keywords:', keywordSteps.length);
+            console.log('🔄 TRIGGER AUTO - Détail des étapes:', keywordSteps.map(s => ({order: s.order, keywords: s.keywords})));
+
+            // Trouver la prochaine étape à déclencher
+            const nextStep = keywordSteps.find(step => {
+                const shouldTrigger = step.order > this.lastTriggeredStep;
+                console.log('🔄 TRIGGER AUTO - Étape', step.order, 'shouldTrigger:', shouldTrigger, '(lastTriggeredStep:', this.lastTriggeredStep, ')');
+                
+                if (!shouldTrigger) return false;
+                
+                // Vérifier si un des messages affichés correspond aux keywords
+                const matchingMessage = displayedMessages.find(messageText => {
+                    const keywordMatch = this.checkKeywordsMatch(step.keywords, messageText);
+                    console.log('🔄 TRIGGER AUTO - Test message "' + messageText + '" vs keywords "' + step.keywords + '":', keywordMatch);
+                    return keywordMatch;
+                });
+                
+                return !!matchingMessage;
+            });
+
+            if (nextStep) {
+                console.log('✅ TRIGGER AUTO - Match trouvé pour étape:', nextStep.order, 'message:', nextStep.messageBody);
+                
+                // 🔧 CORRECTION MAJEURE : Utiliser le délai configuré au lieu de déclencher immédiatement
+                const configuredDelay = (nextStep.delay || 0) * 1000; // Convertir secondes en millisecondes
+                console.log('⏰ TRIGGER AUTO - Délai configuré:', nextStep.delay, 'secondes =', configuredDelay, 'ms');
+                
+                setTimeout(() => {
+                    this.addAutomaticResponse(nextStep);
+                    this.lastTriggeredStep = nextStep.order;
+                    this.saveMessagesToLocalStorage();
+                    
+                    console.log('✅ TRIGGER AUTO - Message affiché après délai, lastTriggeredStep mis à jour:', this.lastTriggeredStep);
+                    
+                    // Programmer le prochain cycle avec un délai minimal
+                    setTimeout(() => {
+                        this.isAutoTriggerRunning = false; // Permettre un nouveau cycle
+                        this.triggerAutomaticResponses();
+                    }, 500); // Délai minimal pour éviter les conflits
+                    
+                }, configuredDelay); // Utiliser le délai configuré
+                
+            } else {
+                console.log('🔄 TRIGGER AUTO - Aucune étape suivante trouvée - Arrêt de la cascade');
+                this.isAutoTriggerRunning = false; // Libérer le flag
+            }
+            
+        } catch (error) {
+            console.error('🔄 TRIGGER AUTO - Erreur:', error);
+            this.isAutoTriggerRunning = false; // Libérer le flag en cas d'erreur
         }
     }
 
@@ -585,10 +754,11 @@ export default class SlackSimulator extends LightningElement {
         
         console.log('✅ Conditions validées, poursuite du traitement...');
 
-        const messageLower = messageText.toLowerCase();
+        const messageLower = messageText.toLowerCase().trim();
         
-        // Chercher la prochaine étape avec keywords (order supérieur au dernier déclenché)
-        const nextSteps = this.conversationFlow.filter(step => {
+        // ⚠️ CORRECTION : Chercher TOUTES les étapes avec keywords, pas seulement celles avec order > lastTriggeredStep
+        // Car le problème peut venir du fait que lastTriggeredStep est mal géré
+        const keywordSteps = this.conversationFlow.filter(step => {
             if (!step) return false;
             
             // Vérifier que l'étape a des keywords valides
@@ -596,35 +766,121 @@ export default class SlackSimulator extends LightningElement {
                                    typeof step.keywords === 'string' && 
                                    step.keywords.trim() !== '';
             
-            // Vérifier que l'ordre est supérieur au dernier déclenché
-            const validOrder = step.order && step.order > this.lastTriggeredStep;
+            return hasValidKeywords;
+        }).sort((a, b) => (a.order || 0) - (b.order || 0));
+
+        console.log('🔍 Toutes les étapes avec keywords:', keywordSteps.length);
+        console.log('🔍 Étapes avec keywords:', keywordSteps.map(s => ({
+            order: s.order, 
+            keywords: s.keywords, 
+            messageBody: s.messageBody.substring(0, 50) + '...'
+        })));
+
+        // Trouver la prochaine étape à déclencher (première étape non encore déclenchée)
+        const nextStep = keywordSteps.find(step => {
+            const shouldTrigger = step.order > this.lastTriggeredStep;
+            console.log('🔍 Étape', step.order, 'shouldTrigger:', shouldTrigger, '(lastTriggeredStep:', this.lastTriggeredStep, ')');
+            return shouldTrigger;
+        });
+
+        if (!nextStep) {
+            console.log('🔍 Aucune étape suivante à déclencher trouvée');
+            return;
+        }
+
+        console.log('🔍 Prochaine étape à vérifier:', nextStep);
+        console.log('🔍 Vérification des keywords "' + nextStep.keywords + '" dans "' + messageText + '"');
+        
+        // Vérifier si le message correspond aux keywords de la prochaine étape
+        if (this.checkKeywordsMatch(nextStep.keywords, messageLower)) {
+            console.log('✅ Match trouvé pour l\'étape:', nextStep.order, 'avec les mots-clés:', nextStep.keywords);
             
-            return hasValidKeywords && validOrder;
-        }).sort((a, b) => a.order - b.order);
+            // Déclencher la réponse automatique après le délai
+            setTimeout(() => {
+                this.addAutomaticResponse(nextStep);
+            }, (nextStep.delay || 0) * 1000);
+            
+            // Mettre à jour le dernier step déclenché
+            this.lastTriggeredStep = nextStep.order;
+            
+            // Sauvegarder immédiatement l'état mis à jour
+            this.saveMessagesToLocalStorage();
+            console.log('💾 État de conversation sauvegardé, lastTriggeredStep:', this.lastTriggeredStep);
+        } else {
+            console.log('❌ Aucun match trouvé pour l\'étape:', nextStep.order);
+            console.log('❌ Keywords attendus:', nextStep.keywords);
+            console.log('❌ Message reçu:', messageText);
+        }
+    }
 
-        console.log('🔍 Étapes éligibles trouvées:', nextSteps.length, 'pour le message:', messageText);
-        console.log('🔍 Étapes éligibles:', nextSteps);
+    // 🔄 NOUVELLE MÉTHODE : Vérifier les déclenchements pour les messages initiaux
+    checkConversationFlowForInitialMessage(messageText) {
+        console.log('🔄 checkConversationFlowForInitialMessage appelé avec:', messageText);
+        console.log('🔄 lastTriggeredStep actuel:', this.lastTriggeredStep);
+        
+        // Utiliser la même logique que checkConversationFlow mais avec un flag différent
+        if (!this.isConversationActive || this.conversationFlow.length === 0) {
+            console.log('🔄 Conditions non remplies pour les messages initiaux');
+            return;
+        }
 
-        // Vérifier la première étape éligible
-        for (const step of nextSteps) {
-            console.log('🔍 Vérification de l\'étape:', step);
-            if (this.checkKeywordsMatch(step.keywords, messageLower)) {
-                console.log('✅ Match trouvé pour l\'étape:', step.order, 'avec les mots-clés:', step.keywords);
+        const messageLower = messageText.toLowerCase().trim();
+        
+        // Chercher les étapes avec keywords qui peuvent être déclenchées
+        const keywordSteps = this.conversationFlow.filter(step => {
+            if (!step) return false;
+            
+            const hasValidKeywords = step.keywords && 
+                                   typeof step.keywords === 'string' && 
+                                   step.keywords.trim() !== '';
+            
+            return hasValidKeywords;
+        }).sort((a, b) => (a.order || 0) - (b.order || 0));
+
+        console.log('🔄 Étapes avec keywords pour messages initiaux:', keywordSteps.length);
+        console.log('🔄 Étapes disponibles:', keywordSteps.map(s => ({order: s.order, keywords: s.keywords, messageBody: s.messageBody.substring(0, 30)})));
+
+        // Trouver la prochaine étape à déclencher
+        console.log('🔄 RECHERCHE - lastTriggeredStep actuel:', this.lastTriggeredStep);
+        console.log('🔄 RECHERCHE - Étapes avec keywords disponibles:', keywordSteps.map(s => s.order));
+        
+        const nextStep = keywordSteps.find(step => {
+            const shouldTrigger = step.order > this.lastTriggeredStep;
+            console.log('🔄 RECHERCHE - Étape', step.order, 'shouldTrigger:', shouldTrigger, '(lastTriggeredStep:', this.lastTriggeredStep, ')');
+            return shouldTrigger;
+        });
+        
+        console.log('🔄 RECHERCHE - Prochaine étape trouvée:', nextStep ? nextStep.order : 'AUCUNE');
+
+        if (!nextStep) {
+            console.log('🔄 Aucune étape suivante pour message initial');
+            console.log('🔄 lastTriggeredStep:', this.lastTriggeredStep, 'vs étapes disponibles:', keywordSteps.map(s => s.order));
+            return;
+        }
+
+        console.log('🔄 Prochaine étape à vérifier pour message initial:', nextStep);
+        console.log('🔄 Keywords à matcher:', nextStep.keywords, 'dans:', messageText);
+        
+        if (this.checkKeywordsMatch(nextStep.keywords, messageLower)) {
+            console.log('✅ Match trouvé pour message initial - étape:', nextStep.order);
+            
+            // Déclencher la réponse automatique après le délai
+            setTimeout(() => {
+                this.addAutomaticResponse(nextStep);
                 
-                // Déclencher la réponse automatique après le délai
+                // 🔄 NOUVEAU : Vérifier si cette réponse peut déclencher une autre réponse (cascade)
                 setTimeout(() => {
-                    this.addAutomaticResponse(step);
-                }, (step.delay || 0) * 1000);
+                    this.checkConversationFlowForInitialMessage(nextStep.messageBody);
+                }, 300); // Petit délai pour la cascade
                 
-                // Mettre à jour le dernier step déclenché
-                this.lastTriggeredStep = step.order;
-                
-                // Sauvegarder immédiatement l'état mis à jour
-                this.saveMessagesToLocalStorage();
-                console.log('💾 État de conversation sauvegardé, lastTriggeredStep:', this.lastTriggeredStep);
-                
-                break; // Arrêter après le premier match
-            }
+            }, (nextStep.delay || 0) * 1000);
+            
+            // Mettre à jour le dernier step déclenché
+            this.lastTriggeredStep = nextStep.order;
+            this.saveMessagesToLocalStorage();
+            console.log('💾 lastTriggeredStep mis à jour depuis message initial:', this.lastTriggeredStep);
+        } else {
+            console.log('❌ Aucun match pour message initial');
         }
     }
 
@@ -635,13 +891,13 @@ export default class SlackSimulator extends LightningElement {
             if (!keywords || 
                 typeof keywords !== 'string' || 
                 keywords.trim() === '') {
-                console.log('Keywords invalides:', keywords);
+                console.log('🔍 Keywords invalides:', keywords);
                 return false;
             }
             
             // Validation du message
             if (!messageLower || typeof messageLower !== 'string') {
-                console.log('Message invalide:', messageLower);
+                console.log('🔍 Message invalide:', messageLower);
                 return false;
             }
             
@@ -652,18 +908,28 @@ export default class SlackSimulator extends LightningElement {
             
             // Si aucun keyword valide, retourner false
             if (keywordList.length === 0) {
-                console.log('Aucun keyword valide trouvé');
+                console.log('🔍 Aucun keyword valide trouvé');
                 return false;
             }
             
-            // Vérifier que TOUS les mots-clés sont présents
-            const allKeywordsPresent = keywordList.every(keyword => messageLower.includes(keyword));
+            console.log('🔍 Keywords à vérifier:', keywordList);
+            console.log('🔍 Message à analyser:', messageLower);
             
-            console.log('Vérification mots-clés:', keywordList, 'dans:', messageLower, '→', allKeywordsPresent);
+            // Vérifier que TOUS les mots-clés sont présents (logique ET)
+            const matchResults = keywordList.map(keyword => {
+                const isPresent = messageLower.includes(keyword);
+                console.log('🔍 Keyword "' + keyword + '" présent:', isPresent);
+                return isPresent;
+            });
+            
+            const allKeywordsPresent = matchResults.every(result => result);
+            
+            console.log('🔍 Résultat final - Tous les mots-clés présents:', allKeywordsPresent);
+            console.log('🔍 Détail des matches:', keywordList.map((kw, i) => `"${kw}": ${matchResults[i]}`));
             
             return allKeywordsPresent;
         } catch (error) {
-            console.error('Erreur lors de la vérification des keywords:', error);
+            console.error('🔍 Erreur lors de la vérification des keywords:', error);
             return false;
         }
     }
@@ -684,6 +950,13 @@ export default class SlackSimulator extends LightningElement {
             
             // Sauvegarder automatiquement les messages
             this.saveMessagesToLocalStorage();
+            
+            // 🔧 CORRECTION : Déclencher une vérification automatique après ajout du message
+            // Cela permet de continuer la chaîne automatique si ce message contient des mots-clés
+            setTimeout(() => {
+                console.log('🔄 Vérification automatique après ajout de réponse:', autoMessage.messageBody);
+                this.checkConversationFlow(autoMessage.messageBody);
+            }, 100); // Petit délai pour s'assurer que le message est bien ajouté
             
             // Faire défiler vers le bas pour voir la réponse automatique
             this.scrollToBottom();
