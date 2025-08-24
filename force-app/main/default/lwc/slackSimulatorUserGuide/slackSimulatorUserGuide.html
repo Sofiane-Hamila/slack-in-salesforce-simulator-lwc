@@ -1,0 +1,362 @@
+<template>
+    <div class="slds-card">
+        <!-- En-tête du guide -->
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <lightning-icon icon-name="utility:knowledge_base" alternative-text="User Guide" title="User Guide" size="medium"></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-text-heading_medium">User Guide - Slack In SF Simulator</span>
+                    </h2>
+                    <p class="slds-text-body_small slds-text-color_weak">
+                        Learn how to configure and effectively use the Slack conversation simulator
+                    </p>
+                </div>
+            </header>
+        </div>
+
+        <!-- Contenu du guide -->
+        <div class="slds-card__body slds-card__body_inner">
+            
+            <!-- Disclaimer -->
+            <div class="slds-m-bottom_large">
+                <div class="slds-notify slds-notify_alert slds-theme_warning slds-m-bottom_medium">
+                    <span class="slds-assistive-text">Important Notice</span>
+                    <div class="slds-notify__body">
+                        <h3 class="slds-text-heading_small slds-m-bottom_small">⚠️ IMPORTANT DISCLAIMER</h3>
+                        <div class="slds-text-body_regular">
+                            <p class="slds-m-bottom_small">
+                                <strong>This is a demonstration component designed exclusively for internal Salesforce use</strong> to simulate Slack integration within Salesforce environments.
+                            </p>
+                            <p class="slds-m-bottom_small">
+                                <strong style="color: #d73449;">This component must NOT be used in production environments or commercialized under any circumstances.</strong> 
+                                It is intended solely for demonstration, testing, and educational purposes within Salesforce development contexts.
+                            </p>
+                            <p class="slds-m-bottom_small">
+                                By using this component, you acknowledge that:
+                            </p>
+                            <ul class="slds-list_dotted slds-m-left_medium slds-m-bottom_small">
+                                <li>This is not a production-ready solution</li>
+                                <li>No warranty or support is provided</li>
+                                <li>Use is strictly limited to internal demonstration purposes</li>
+                                <li>Commercial use or redistribution is prohibited</li>
+                            </ul>
+                            <p class="slds-text-align_center slds-text-body_small" style="background-color: #f3f2f2; padding: 8px; border-radius: 4px; color: #d73449;">
+                                <strong style="color: #d73449;">For any questions regarding proper usage, please contact:</strong><br/>
+                                <strong style="color: #d73449;">Sofiane Hamila</strong> - <a href="mailto:shamila@salesforce.com" style="color: #d73449; text-decoration: underline;">shamila@salesforce.com</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Overview -->
+            <div class="slds-m-bottom_large">
+                <h3 class="slds-text-heading_small slds-m-bottom_medium">🎯 Overview</h3>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <p class="slds-m-bottom_medium">
+                            The Slack In SF Simulator allows you to create and test simulated Slack conversations in Account, Opportunities, Cases Salesforce Record Pages 
+                            with automatic responses based on keywords.
+                        </p>
+                        
+                        <h4 class="slds-text-heading_x-small slds-m-bottom_small">🔧 Components</h4>
+                        <ul class="slds-list_dotted">
+                            <li><strong>Configurator</strong>: Interface to create your scenarios</li>
+                            <li><strong>Simulator</strong>: Simulated Slack chat interface</li>
+                            <li><strong>Orchestrator</strong>: Coordination between components</li>
+                        </ul>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <div class="slds-box slds-theme_default">
+                            <h4 class="slds-text-heading_x-small slds-m-bottom_medium">🚀 Quick Start</h4>
+                            <ol class="slds-list_ordered">
+                                <li>Go to the <strong>Settings</strong> tab</li>
+                                <li>Configure your messages in the configurator</li>
+                                <li>Define keywords for automatic responses</li>
+                                <li>Click "Launch Simulator"</li>
+                                <li>Test your conversations!</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenario Configuration -->
+            <div class="slds-m-bottom_large">
+                <h3 class="slds-text-heading_small slds-m-bottom_medium">📝 Scenario Configuration</h3>
+                
+                <p class="slds-m-bottom_medium">
+                    Click <strong>"+ Add Row"</strong> to create new messages in your scenario.
+                </p>
+
+                <div class="slds-box slds-theme_shade slds-m-bottom_medium">
+                    <h4 class="slds-text-heading_x-small slds-m-bottom_small">Available fields:</h4>
+                    <div class="slds-grid slds-wrap slds-gutters_small">
+                        <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-3">
+                            <strong>Order:</strong> Execution sequence
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-3">
+                            <strong>Message:</strong> Content to display
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-3">
+                            <strong>Keywords:</strong> Automatic triggers
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-3">
+                            <strong>User:</strong> Sender's name
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-3">
+                            <strong>Avatar URL:</strong> Profile picture URL
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-3">
+                            <strong>Timestamp:</strong> Message date/time
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-3">
+                            <strong>Delay:</strong> Wait before response (sec)
+                        </div>
+                    </div>
+                    <p class="slds-text-body_small slds-text-color_weak slds-m-top_small slds-text-align_center">
+                        <em>Please refer to <strong>Tips and Best Practices</strong> section to learn how the fields work</em>
+                    </p>
+                </div>
+
+
+
+                <div class="slds-notify slds-notify_alert slds-theme_info">
+                    <span class="slds-assistive-text">Info</span>
+                    <h4 class="slds-text-heading_x-small">💡 Tip</h4>
+                    <p>Messages <strong>without keywords</strong> are automatically displayed when the simulator starts.</p>
+                </div>
+            </div>
+
+
+
+            <!-- Using the Simulator -->
+            <div class="slds-m-bottom_large">
+                <h3 class="slds-text-heading_small slds-m-bottom_medium">🚀 Using the Simulator</h3>
+                
+                <h4 class="slds-text-heading_x-small slds-m-bottom_small">Simulator interface:</h4>
+                <ul class="slds-list_dotted slds-m-bottom_medium">
+                    <li><strong>Messages area:</strong> Displays the simulated conversation</li>
+                    <li><strong>Input field:</strong> Type your test messages</li>
+                    <li><strong>Send button:</strong> Sends the message and triggers responses</li>
+                    <li><strong>Reset buttons:</strong> Reset the simulator or configuration</li>
+                </ul>
+
+                <div class="slds-box slds-theme_shade">
+                    <h4 class="slds-text-heading_x-small slds-m-bottom_small">Keyboard shortcuts:</h4>
+                    <p><kbd>Ctrl + Enter</kbd> or <kbd>Shift + Enter</kbd>: Send message</p>
+                </div>
+            </div>
+
+            <!-- Tips and Best Practices -->
+            <div class="slds-m-bottom_large">
+                <h3 class="slds-text-heading_small slds-m-bottom_medium">✨ Tips and Best Practices</h3>
+                
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <div class="slds-box slds-theme_success">
+                            <h4 class="slds-text-heading_x-small slds-m-bottom_small">✅ Best Practices</h4>
+                            <ul class="slds-list_dotted">
+                                <li>Use simple and common keywords</li>
+                                <li>Test your scenarios regularly</li>
+                                <li>Organize your messages in logical order</li>
+                                <li>Use realistic delays (1-3 seconds)</li>
+                                <li>Give explicit user names</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <div class="slds-box slds-theme_warning">
+                            <h4 class="slds-text-heading_x-small slds-m-bottom_small">⚠️ Things to Avoid</h4>
+                            <ul class="slds-list_dotted">
+                                <li>Too complex or rare keywords</li>
+                                <li>Inconsistent message orders</li>
+                                <li>Too long delays (>10 seconds)</li>
+                                <li>Empty or contextless messages</li>
+                                <li>Too many keywords on a single row</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keywords Management -->
+                <div class="slds-box slds-theme_default slds-m-top_medium slds-m-bottom_medium">
+                    <h4 class="slds-text-heading_x-small slds-m-bottom_small">🔑 Keywords Management</h4>
+                    
+                    <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <h5 class="slds-text-heading_x-small slds-m-bottom_small">How do keywords work?</h5>
+                            <p class="slds-m-bottom_medium slds-text-body_small">
+                                Keywords trigger automatic responses when a user 
+                                types a message containing these terms in the simulator.
+                            </p>
+                            
+                            <h5 class="slds-text-heading_x-small slds-m-bottom_small">Syntax:</h5>
+                            <ul class="slds-list_dotted slds-m-bottom_medium slds-text-body_small">
+                                <li><strong>Single word:</strong> hello</li>
+                                <li><strong>Multiple words (AND):</strong> hello, help</li>
+                                <li><strong>Case insensitive:</strong> HELLO = hello</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <div class="slds-box slds-theme_shade">
+                                <h5 class="slds-text-heading_x-small slds-m-bottom_small">Practical examples:</h5>
+                                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="slds-text-body_small">Keywords</th>
+                                            <th scope="col" class="slds-text-body_small">Triggered by</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="slds-text-body_small">help</td>
+                                            <td class="slds-text-body_small">"I need help"</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="slds-text-body_small">price, quote</td>
+                                            <td class="slds-text-body_small">"What is the price for a quote?"</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="slds-text-body_small">problem</td>
+                                            <td class="slds-text-body_small">"There is a problem"</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slds-notify slds-notify_alert slds-theme_warning">
+                        <span class="slds-assistive-text">Warning</span>
+                        <h5 class="slds-text-heading_x-small">⚠️ Important</h5>
+                        <p class="slds-text-body_small">All keywords must be present in the message to trigger the response (AND logic).</p>
+                    </div>
+                </div>
+
+                <!-- Field Details -->
+                <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                    <h4 class="slds-text-heading_x-small slds-m-bottom_small">📅 Timestamp Field Details:</h4>
+                    <p class="slds-m-bottom_small">
+                        The <strong>Timestamp</strong> field allows you to specify when the message appears to have been sent in the simulation.
+                    </p>
+                    <ul class="slds-list_dotted slds-m-left_medium">
+                        <li><strong>Format:</strong> Automatically formatted based on your locale settings</li>
+                        <li><strong>Default behavior:</strong> If left empty, the current date and time will be used automatically</li>
+                        <li><strong>Custom values:</strong> You can enter a specific date/time for more realistic scenarios</li>
+                        <li><strong>Display:</strong> Shows next to the user's name in the simulated chat interface</li>
+                    </ul>
+                </div>
+
+                <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                    <h4 class="slds-text-heading_x-small slds-m-bottom_small">🖼️ Avatar URL Field Details:</h4>
+                    <p class="slds-m-bottom_small">
+                        The <strong>Avatar URL</strong> field allows you to specify a custom profile picture for each message sender in the simulation.
+                    </p>
+                    <ul class="slds-list_dotted slds-m-left_medium slds-m-bottom_small">
+                        <li><strong>Purpose:</strong> Displays a profile picture next to the user's name in the chat interface</li>
+                        <li><strong>Default behavior:</strong> If left empty, an auto-generated avatar with user initials will be created</li>
+                        <li><strong>Custom URLs:</strong> You can provide a direct link to any image file</li>
+                        <li><strong>Salesforce URLs:</strong> Internal Salesforce profile photo URLs are supported (e.g., /profilephoto/...)</li>
+                    </ul>
+                    
+                    <div class="slds-notify slds-notify_alert slds-theme_warning slds-m-bottom_small">
+                        <span class="slds-assistive-text">CSP Requirements</span>
+                        <h5 class="slds-text-heading_x-small slds-m-bottom_x-small">⚠️ Content Security Policy (CSP) Requirements</h5>
+                        <p class="slds-text-body_small slds-m-bottom_x-small">
+                            For external image URLs to work properly in Salesforce, they must comply with CSP policies:
+                        </p>
+                        <ul class="slds-list_dotted slds-m-left_medium slds-text-body_small">
+                            <li><strong>HTTPS Required:</strong> Only secure HTTPS URLs are allowed</li>
+                            <li><strong>Trusted Domains:</strong> The domain must be added to Salesforce CSP Trusted Sites</li>
+                            <li><strong>Common trusted domains:</strong> Salesforce CDN, GitHub, LinkedIn, Gravatar</li>
+                            <li><strong>Admin Setup:</strong> Go to Setup → CSP Trusted Sites → New Trusted Site</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="slds-box slds-theme_success slds-m-bottom_small">
+                        <h5 class="slds-text-heading_x-small slds-m-bottom_x-small">✅ Recommended Avatar Sources</h5>
+                        <ul class="slds-list_dotted slds-m-left_medium slds-text-body_small">
+                            <li><strong>Salesforce Profile Photos:</strong> /profilephoto/005/F (internal paths)</li>
+                            <li><strong>Gravatar:</strong> https://www.gravatar.com/avatar/...</li>
+                            <li><strong>LinkedIn:</strong> https://media.licdn.com/dms/image/...</li>
+                            <li><strong>GitHub:</strong> https://avatars.githubusercontent.com/...</li>
+                            <li><strong>Static Resources:</strong> Upload images as Salesforce Static Resources</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="slds-box slds-theme_info">
+                        <h5 class="slds-text-heading_x-small slds-m-bottom_x-small">💡 Pro Tips</h5>
+                        <ul class="slds-list_dotted slds-m-left_medium slds-text-body_small">
+                            <li><strong>Test First:</strong> Always test your avatar URLs before using them in scenarios</li>
+                            <li><strong>Fallback:</strong> If an image fails to load, the component will show initials instead</li>
+                            <li><strong>Performance:</strong> Smaller image files (under 100KB) load faster</li>
+                            <li><strong>Consistency:</strong> Use similar image sizes (recommended: 40x40px) for better UI</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Troubleshooting -->
+            <div class="slds-m-bottom_large">
+                <h3 class="slds-text-heading_small slds-m-bottom_medium">🛠️ Troubleshooting</h3>
+                
+                <lightning-accordion allow-multiple-sections-open>
+                    <lightning-accordion-section name="problem1" label="Keywords don't trigger responses">
+                        <div class="slds-m-around_medium">
+                            <h4 class="slds-text-heading_x-small slds-m-bottom_small">Possible causes:</h4>
+                            <ul class="slds-list_dotted slds-m-bottom_medium">
+                                <li>Misspelled keywords</li>
+                                <li>Not all keywords are present in the message</li>
+                                <li>Incorrect message order (already triggered)</li>
+                            </ul>
+                            <h4 class="slds-text-heading_x-small slds-m-bottom_small">Solutions:</h4>
+                            <ol class="slds-list_ordered">
+                                <li>Check keyword spelling</li>
+                                <li>Test with a message containing all keywords</li>
+                                <li>Check the order and that the message hasn't already been triggered</li>
+                                <li>Use the "Reset Simulator" button to start over</li>
+                            </ol>
+                        </div>
+                    </lightning-accordion-section>
+
+                    <lightning-accordion-section name="problem2" label="Simulator doesn't display">
+                        <div class="slds-m-around_medium">
+                            <h4 class="slds-text-heading_x-small slds-m-bottom_small">Solutions:</h4>
+                            <ol class="slds-list_ordered">
+                                <li>Refresh the page</li>
+                                <li>Check that you have configured at least one row</li>
+                                <li>Click "Launch Simulator"</li>
+                                <li>Check the developer console (F12) for errors</li>
+                            </ol>
+                        </div>
+                    </lightning-accordion-section>
+
+                    <lightning-accordion-section name="problem3" label="Configuration doesn't save">
+                        <div class="slds-m-around_medium">
+                            <h4 class="slds-text-heading_x-small slds-m-bottom_small">Solutions:</h4>
+                            <ol class="slds-list_ordered">
+                                <li>Check that localStorage is enabled in your browser</li>
+                                <li>Try in a private browsing tab</li>
+                                <li>Clear browser cache</li>
+                                <li>Recreate your configuration</li>
+                            </ol>
+                        </div>
+                    </lightning-accordion-section>
+                </lightning-accordion>
+
+                <div class="slds-notify slds-notify_alert slds-theme_info slds-m-top_medium">
+                    <span class="slds-assistive-text">Support</span>
+                    <h4 class="slds-text-heading_x-small">🆘 Need Help?</h4>
+                    <p>If the problem persists, open the developer console (F12) and check the logs for more information.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</template>

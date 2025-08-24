@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Onglet guide utilisateur pour les composants Slack Simulator</description>
+    <label>User Guide</label>
+    <lwcComponent>slackSimulatorUserGuide</lwcComponent>
+    <motif>Custom58: Desk</motif>
+</CustomTab>

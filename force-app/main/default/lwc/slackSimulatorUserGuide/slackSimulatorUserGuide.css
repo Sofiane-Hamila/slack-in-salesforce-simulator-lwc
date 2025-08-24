@@ -1,0 +1,210 @@
+/* 🎨 SIMPLIFIED SLACK SIMULATOR USER GUIDE STYLES */
+/* Palette: Violet Slack (#4A154B), Blanc (#ffffff), Gris clair (#f8f9fa) */
+
+/* ============ MAIN CONTAINER ============ */
+.slds-card {
+    max-width: 100%;
+    background: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+.slds-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4A154B, #ffffff);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+.slds-card__header {
+    background: linear-gradient(135deg, #4A154B 0%, #ffffff 100%);
+    color: white;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Force white color for all text in header */
+.slds-card__header .slds-text-color_weak {
+    color: white !important;
+}
+
+.slds-card__header lightning-icon {
+    --slds-c-icon-color-foreground: white;
+    --slds-c-icon-color-foreground-default: white;
+}
+
+.slds-card__header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(-20px, -10px) rotate(180deg); }
+}
+
+.slds-card__body {
+    background: #f8f9fa;
+    position: relative;
+}
+
+/* ============ TYPOGRAPHY ============ */
+.slds-text-heading_medium {
+    color: white;
+    font-weight: 800;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    font-size: 2rem;
+}
+
+.slds-text-heading_small {
+    color: #4A154B;
+    font-weight: 700;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #4A154B;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* ============ SIMPLE BOXES ============ */
+.slds-box {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.slds-box.slds-theme_success {
+    background: white;
+    color: #4A154B;
+    border: 2px solid #4A154B;
+}
+
+.slds-box.slds-theme_warning {
+    background: #4A154B;
+    color: white;
+    border: none;
+}
+
+.slds-box.slds-theme_default {
+    background: white;
+    color: #4A154B;
+    border: 2px solid #4A154B;
+}
+
+.slds-box.slds-theme_shade {
+    background: white;
+    color: #4A154B;
+    border: 1px solid #e5e5e5;
+}
+
+.slds-box.slds-theme_info {
+    background: white;
+    color: #4A154B;
+    border: 2px solid #4A154B;
+}
+
+/* ============ NOTIFICATIONS ============ */
+.slds-notify_alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.slds-notify_alert.slds-theme_info {
+    background: white;
+    border-left: 4px solid #4A154B;
+    color: #4A154B;
+}
+
+.slds-notify_alert.slds-theme_warning {
+    background: #f8f9fa;
+    border-left: 4px solid #4A154B;
+    color: #4A154B;
+}
+
+/* ============ TABLES ============ */
+.slds-table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.slds-table th {
+    background: #4A154B;
+    color: white;
+    font-weight: bold;
+}
+
+.slds-table td {
+    vertical-align: top;
+}
+
+/* ============ SIMPLE ELEMENTS ============ */
+.slds-list_dotted li {
+    margin-bottom: 0.25rem;
+}
+
+.slds-list_ordered li {
+    margin-bottom: 0.25rem;
+}
+
+/* ============ CODE STYLING ============ */
+code, kbd {
+    background-color: #4A154B;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+kbd {
+    background-color: white;
+    color: #4A154B;
+    font-weight: bold;
+    border: 1px solid #4A154B;
+}
+
+/* ============ ACCORDION STYLING ============ */
+.slds-accordion {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.slds-accordion__summary {
+    font-weight: bold;
+}
+
+/* ============ RESPONSIVE DESIGN ============ */
+@media (max-width: 768px) {
+    .slds-col.slds-medium-size_1-of-2,
+    .slds-col.slds-medium-size_1-of-3 {
+        width: 100% !important;
+    }
+    
+    .slds-text-heading_medium {
+        font-size: 1.5rem;
+    }
+    
+    .slds-card__header {
+        padding: 1.5rem;
+    }
+}

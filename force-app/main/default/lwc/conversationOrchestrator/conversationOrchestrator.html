@@ -1,0 +1,17 @@
+<template>
+    <div class="slds-p-around_medium">
+        <!-- Configurateur en haut -->
+        <div class="slds-m-bottom_large">
+            <c-conversation-configurator
+                onlaunchsimulator={handleLaunchSimulator}
+                onshowtoast={handleShowToast}>
+            </c-conversation-configurator>
+        </div>
+        
+        <!-- Simulateur Slack en dessous -->
+        <div class="slds-m-top_large">
+            <c-slack-simulator conversation-data={simulatorData}>
+            </c-slack-simulator>
+        </div>
+    </div>
+</template>

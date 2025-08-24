@@ -1,0 +1,172 @@
+<template>
+    <lightning-card title="Conversation Scenario Builder" icon-name="utility:chat">
+        <div class="slds-p-around_medium">
+            
+            <!-- Tableau des scénarios -->
+            <div class="slds-scrollable_x">
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Order">Order</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Message Content">Message Content</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Keywords">Keywords</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Username">Username</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Timestamp">Timestamp</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Avatar URL">Avatar URL</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Delay">Delay</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Actions">Actions</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template if:true={hasScenarioRows}>
+                            <template for:each={scenarioRows} for:item="row" for:index="index">
+                                <tr key={row.id} class="slds-hint-parent">
+                                <td>
+                                    <lightning-input 
+                                        type="number" 
+                                        value={row.order} 
+                                        data-row-id={row.id} 
+                                        data-field="order"
+                                        onchange={handleInputChange}
+                                        min="1">
+                                    </lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input 
+                                        type="text" 
+                                        value={row.messageBody} 
+                                        data-row-id={row.id} 
+                                        data-field="messageBody"
+                                        onchange={handleInputChange}
+                                        placeholder="Message content">
+                                    </lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input 
+                                        type="text" 
+                                        value={row.keywords} 
+                                        data-row-id={row.id} 
+                                        data-field="keywords"
+                                        onchange={handleInputChange}
+                                        placeholder="Trigger keywords">
+                                    </lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input 
+                                        type="text" 
+                                        value={row.userName} 
+                                        data-row-id={row.id} 
+                                        data-field="userName"
+                                        onchange={handleInputChange}
+                                        placeholder="Username">
+                                    </lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input 
+                                        type="text" 
+                                        value={row.timestamp} 
+                                        data-row-id={row.id} 
+                                        data-field="timestamp"
+                                        onchange={handleInputChange}
+                                        placeholder="Timestamp">
+                                    </lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input 
+                                        type="text" 
+                                        value={row.avatarUrl} 
+                                        data-row-id={row.id} 
+                                        data-field="avatarUrl"
+                                        onchange={handleInputChange}
+                                        placeholder="Avatar URL">
+                                    </lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input 
+                                        type="number" 
+                                        value={row.delay} 
+                                        data-row-id={row.id} 
+                                        data-field="delay"
+                                        onchange={handleInputChange}
+                                        min="0"
+                                        step="0.1">
+                                    </lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-button-icon
+                                        icon-name="utility:delete"
+                                        variant="bare"
+                                        alternative-text="Delete row"
+                                        data-row-id={row.id}
+                                        onclick={deleteRow}
+                                        class="slds-m-left_x-small">
+                                    </lightning-button-icon>
+                                </td>
+                                </tr>
+                            </template>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bouton Ajouter une interaction -->
+            <div class="slds-m-top_medium">
+                <lightning-button 
+                    label="Add Interaction" 
+                    icon-name="utility:add"
+                    onclick={addRow}
+                    variant="neutral">
+                </lightning-button>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="slds-m-top_medium">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning-button 
+                            label="Save and Launch Slack Simulator" 
+                            variant="brand"
+                            icon-name="utility:launch"
+                            onclick={saveAndLaunchSimulator}>
+                        </lightning-button>
+                    </div>
+                    <div class="slds-col slds-no-flex slds-grid slds-gutters_small">
+                        <div class="slds-col slds-size_auto">
+                            <lightning-button 
+                                label="Reset Configurator" 
+                                variant="destructive"
+                                icon-name="utility:clear"
+                                onclick={resetConfigurator}>
+                            </lightning-button>
+                        </div>
+                        <div class="slds-col slds-size_auto">
+                            <lightning-button 
+                                label="Reset Simulator" 
+                                variant="neutral"
+                                icon-name="utility:refresh"
+                                onclick={resetSimulator}>
+                            </lightning-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </lightning-card>
+</template>

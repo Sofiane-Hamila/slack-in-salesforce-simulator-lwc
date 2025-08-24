@@ -1,0 +1,99 @@
+<template>
+    <lightning-card>
+        <div slot="title">
+            <lightning-layout horizontal-align="start" vertical-align="center">
+                <lightning-layout-item size="auto" padding="none">
+                    <img src="/resource/slack_logo" alt="Slack Logo" style="height: 24px; margin-right: 8px;" />
+                </lightning-layout-item>
+                <lightning-layout-item size="auto" padding="none">
+                    <span style="font-weight: bold; font-size: 1.1rem;">Slack Channel</span>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+        
+        <div class="slack-container">
+            
+            <!-- Zone d'affichage des messages -->
+            <div class="messages-area">
+                <template for:each={messages} for:item="message">
+                    <div key={message.id} class="message-container">
+                        <lightning-layout horizontal-align="start" vertical-align="start">
+                            <lightning-layout-item size="auto" padding="none">
+                                <div class="avatar-container">
+                                    <img 
+                                        src={message.avatarUrl} 
+                                        alt={message.userName}
+                                        class="user-avatar"
+                                    />
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="auto" padding="none" class="message-content">
+                                <div class="message-header">
+                                    <span class="user-name">{message.userName}</span>
+                                    <span class="timestamp">{message.timestamp}</span>
+                                </div>
+                                <div class="message-text">{message.messageBody}</div>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+                </template>
+            </div>
+            
+            <!-- Zone de saisie avec barre d'outils -->
+            <div class="input-area">
+                <!-- Barre d'outils -->
+                <div class="toolbar">
+                    <lightning-button-icon 
+                        icon-name="utility:bold" 
+                        variant="bare" 
+                        alternative-text="Gras">
+                    </lightning-button-icon>
+                    <lightning-button-icon 
+                        icon-name="utility:italic" 
+                        variant="bare" 
+                        alternative-text="Italique">
+                    </lightning-button-icon>
+                    <lightning-button-icon 
+                        icon-name="utility:strikethrough" 
+                        variant="bare" 
+                        alternative-text="Barré">
+                    </lightning-button-icon>
+                    <lightning-button-icon 
+                        icon-name="utility:link" 
+                        variant="bare" 
+                        alternative-text="Lien">
+                    </lightning-button-icon>
+                    <lightning-button-icon 
+                        icon-name="utility:emoji" 
+                        variant="bare" 
+                        alternative-text="Emoji">
+                    </lightning-button-icon>
+                    <lightning-button-icon 
+                        icon-name="utility:attach" 
+                        variant="bare" 
+                        alternative-text="Pièce jointe">
+                    </lightning-button-icon>
+                </div>
+                
+                <!-- Zone de saisie de texte et bouton d'envoi -->
+                <div class="input-row">
+                    <textarea 
+                        value={newMessageText}
+                        oninput={handleMessageInput}
+                        onkeydown={handleKeyDown}
+                        placeholder="Message the slack channel... (Ctrl+Enter to send)"
+                        class="message-textarea">
+                    </textarea>
+                    
+                    <!-- Bouton d'envoi carré -->
+                    <lightning-button 
+                        variant="success" 
+                        icon-name="utility:send"
+                        onclick={handleSendMessage}
+                        class="send-button">
+                    </lightning-button>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,132 @@
+.slds-table {
+    font-size: 0.875rem;
+}
+
+.slds-table th {
+    background-color: #f3f2f2;
+    font-weight: 600;
+}
+
+.slds-table td {
+    vertical-align: top;
+    padding: 0.5rem;
+}
+
+.slds-table input,
+.slds-table lightning-combobox {
+    min-width: 120px;
+}
+
+.slds-table lightning-input[type="checkbox"] {
+    margin: 0;
+}
+
+.slds-textarea {
+    background-color: #f8f9fa;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    resize: vertical;
+}
+
+.slds-button-icon {
+    color: #706e6b;
+}
+
+.slds-button-icon:hover {
+    color: #d4504c;
+}
+
+.slds-scrollable_x {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Optimisation des largeurs de colonnes */
+.slds-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+/* Colonnes étroites pour les valeurs courtes */
+.slds-table th:nth-child(1), /* Order */
+.slds-table td:nth-child(1) {
+    width: 80px;
+}
+
+.slds-table th:nth-child(7), /* Delay */
+.slds-table td:nth-child(7) {
+    width: 90px;
+}
+
+.slds-table th:nth-child(8), /* Actions */
+.slds-table td:nth-child(8) {
+    width: 80px;
+}
+
+/* Colonne large pour Message Content */
+.slds-table th:nth-child(2), /* Message Content */
+.slds-table td:nth-child(2) {
+    width: 30%;
+    min-width: 200px;
+}
+
+/* Colonnes moyennes pour les autres champs */
+.slds-table th:nth-child(3), /* Keywords */
+.slds-table td:nth-child(3) {
+    width: 15%;
+    min-width: 120px;
+}
+
+.slds-table th:nth-child(4), /* Username */
+.slds-table td:nth-child(4) {
+    width: 12%;
+    min-width: 100px;
+}
+
+.slds-table th:nth-child(5), /* Timestamp */
+.slds-table td:nth-child(5) {
+    width: 15%;
+    min-width: 130px;
+}
+
+.slds-table th:nth-child(6), /* Avatar URL */
+.slds-table td:nth-child(6) {
+    width: 15%;
+    min-width: 120px;
+}
+
+/* Ajustement des inputs pour s'adapter aux nouvelles largeurs */
+.slds-table lightning-input {
+    width: 100%;
+}
+
+/* Inputs spéciaux pour les colonnes étroites */
+.slds-table td:nth-child(1) lightning-input, /* Order */
+.slds-table td:nth-child(7) lightning-input { /* Delay */
+    min-width: 60px;
+}
+
+/* Input large pour Message Content */
+.slds-table td:nth-child(2) lightning-input { /* Message Content */
+    min-width: 180px;
+}
+
+/* Responsive design pour les petits écrans */
+@media (max-width: 768px) {
+    .slds-scrollable_x {
+        overflow-x: auto;
+    }
+    
+    .slds-table {
+        min-width: 1000px;
+        table-layout: auto; /* Revenir au layout automatique sur mobile */
+    }
+    
+    /* Réajuster les largeurs minimales sur mobile */
+    .slds-table th:nth-child(2),
+    .slds-table td:nth-child(2) {
+        min-width: 250px;
+    }
+}

@@ -1,0 +1,20 @@
+.slds-p-around_medium {
+    min-height: 100vh;
+}
+
+/* Séparateur visuel entre configurateur et simulateur */
+.slds-m-bottom_large {
+    border-bottom: 2px solid #d8dde6;
+    padding-bottom: 2rem;
+}
+
+.slds-m-top_large {
+    padding-top: 1rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .slds-p-around_medium {
+        padding: 1rem;
+    }
+}
