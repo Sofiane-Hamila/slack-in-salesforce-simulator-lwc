@@ -22,6 +22,9 @@
 2. Search for **"Slack In SF Simulator"**
 3. **Launch the application**
 
+4. ### Step 4: Add slackSimulator LWC component in the record lightning page
+   
+
 ## 🎯 How to Use
 
 ### Interface Overview
