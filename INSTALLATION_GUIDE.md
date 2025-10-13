@@ -59,45 +59,6 @@ The application contains **2 tabs**:
 - **Bottom Section**: Slack simulation
 - **Unified Workflow**: Configure → Test → Refine
 
-## 🔧 Troubleshooting
 
-### Application Not Visible?
-1. ✅ Check permission set assignment
-2. ✅ Refresh browser (Ctrl+F5)
-3. ✅ Verify installation completed successfully
-
-### Components Not Loading?
-1. ✅ Clear browser cache
-2. ✅ Check JavaScript console for errors
-3. ✅ Ensure Lightning Experience is enabled
-
-### Logo Not Showing?
-1. ✅ Verify static resource deployed
-2. ✅ Check browser network tab for resource loading
-3. ✅ Refresh the page
-
-## 📋 System Requirements
-
-- **Salesforce Edition**: Professional, Enterprise, Unlimited, or Developer
-- **API Version**: 58.0 or higher
-- **Lightning Experience**: Required
-- **Permissions**: System Administrator for installation
-
-## 🆘 Support
-
-For technical issues:
-1. Check the **User Guide** tab in the application
-2. Review browser console for JavaScript errors
-3. Verify all components deployed successfully
-4. Contact your Salesforce administrator
-
-## 📊 Version Information
-
-- **Current Version**: 1.2.0
-- **Package ID**: 04tJ9000000HecQIAS
-- **Developer**: Sofiane Hamila
-- **Release Date**: 2025
-
----
 
 **Ready to simulate Slack conversations in Salesforce!** 🎉
